@@ -5,6 +5,7 @@ import 'package:task_manager/core/widgets/primary_button.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/core/widgets/app_snackbar.dart';
 import 'package:task_manager/features/auth/reset_password_screen.dart';
+import 'package:task_manager/data/remote/auth_api.dart';
 
 class ForgotPasswordOtpScreen extends StatefulWidget {
   final String email;
@@ -21,7 +22,7 @@ class ForgotPasswordOtpScreen extends StatefulWidget {
 
 class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _otpController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
 
   bool _isSubmitting = false;
 
@@ -45,7 +46,7 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
   Future<void> _submit() async {
     if (_isSubmitting) return;
 
-    final form = _formKey.currentState;
+    final FormState? form = _formKey.currentState;
     if (form == null || !form.validate()) {
       return;
     }
@@ -55,27 +56,45 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
     });
 
     try {
-      // Demo delay instead of real API call
-      await Future<void>.delayed(const Duration(milliseconds: 800));
+      final String code = _otpController.text.trim();
+
+      await authApi.verifyPasswordResetCode(
+        email: widget.email,
+        code: code,
+      );
 
       if (!mounted) return;
 
-      final code = _otpController.text.trim();
-
       AppSnackbar.show(
         context: context,
-        message: 'Code verified (demo only). You can now set a new password.',
+        message: 'Code verified successfully.',
         type: AppSnackbarType.success,
         bottomOffset: 24,
       );
 
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<ResetPasswordScreen>(
           builder: (_) => ResetPasswordScreen(
             email: widget.email,
-            otp: code,
+            code: code,
           ),
         ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: e.message,
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: 'Failed to verify code. Please try again.',
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
       );
     } finally {
       if (mounted) {
@@ -100,7 +119,7 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       'Verify code',
                       style: AppTypography.h1,
                     ),

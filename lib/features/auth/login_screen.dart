@@ -6,6 +6,7 @@ import 'package:task_manager/core/widgets/app_snackbar.dart';
 import 'package:task_manager/core/widgets/primary_button.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/routing/route_names.dart';
+import 'package:task_manager/data/remote/auth_api.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // Controllers for email and password text fields
   final _emailController =
       TextEditingController(text: 'arrahman.lus@gmail.com');
-  final _passwordController = TextEditingController(text: '123456@™');
+  final _passwordController = TextEditingController(text: '123456@Tm');
 
   // Local UI state for submit and password visibility
   bool _isSubmitting = false;
@@ -136,12 +137,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Submit handler for the login button
   Future<void> _submit() async {
-    if (_isSubmitting) {
-      return;
-    }
+    if (_isSubmitting) return;
 
-    final bool isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) {
+    final form = _formKey.currentState;
+    if (form == null || !form.validate()) {
       return;
     }
 
@@ -150,24 +149,40 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      // No real API yet, only a small delay to show the loader
-      await Future<void>.delayed(const Duration(milliseconds: 600));
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
 
-      if (!mounted) {
-        return;
-      }
+      await authApi.login(
+        email: email,
+        password: password,
+      );
 
-      // Demo: pretend login is successful
+      if (!mounted) return;
+
       AppSnackbar.show(
         context: context,
-        message:
-        'Logged in successfully (demo only, API is not connected yet).',
+        message: 'Logged in successfully.',
         type: AppSnackbarType.success,
         bottomOffset: 24,
       );
 
       Navigator.pushReplacementNamed(context, RouteNames.home);
-
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: e.message,
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: 'Login failed. Please try again.',
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
     } finally {
       if (mounted) {
         setState(() {

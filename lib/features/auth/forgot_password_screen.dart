@@ -5,6 +5,7 @@ import 'package:task_manager/core/widgets/primary_button.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/core/widgets/app_snackbar.dart';
 import 'package:task_manager/features/auth/forgot_password_otp_screen.dart';
+import 'package:task_manager/data/remote/auth_api.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -41,7 +42,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Future<void> _submit() async {
     if (_isSubmitting) return;
 
-    final form = _formKey.currentState;
+    final FormState? form = _formKey.currentState;
     if (form == null || !form.validate()) {
       return;
     }
@@ -51,24 +52,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     });
 
     try {
-      await Future<void>.delayed(const Duration(milliseconds: 800));
+      final String email = _emailController.text.trim();
+
+      await authApi.sendPasswordResetCode(email: email);
 
       if (!mounted) return;
 
-      final email = _emailController.text.trim();
-
       AppSnackbar.show(
         context: context,
-        message:
-            'A verification code will be sent to $email (demo only, no real email).',
-        type: AppSnackbarType.info,
+        message: 'We have sent a verification code to your email address.',
+        type: AppSnackbarType.success,
         bottomOffset: 24,
       );
 
+      // Navigate to OTP step (Step 2)
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<ForgotPasswordOtpScreen>(
           builder: (_) => ForgotPasswordOtpScreen(email: email),
         ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: e.message,
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: 'Failed to send verification code. Please try again.',
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
       );
     } finally {
       if (mounted) {

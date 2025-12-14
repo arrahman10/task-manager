@@ -4,6 +4,7 @@ import 'package:task_manager/core/constants/app_typography.dart';
 import 'package:task_manager/core/widgets/primary_button.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/core/widgets/app_snackbar.dart';
+import 'package:task_manager/data/remote/auth_api.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -79,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _submit() async {
     if (_isSubmitting) return;
 
-    final form = _formKey.currentState;
+    final FormState? form = _formKey.currentState;
     if (form == null || !form.validate()) {
       return;
     }
@@ -89,19 +90,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await Future<void>.delayed(const Duration(milliseconds: 800));
+      final String fullName = _nameController.text.trim();
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
+
+      await authApi.register(
+        fullName: fullName,
+        email: email,
+        password: password,
+      );
 
       if (!mounted) return;
 
       AppSnackbar.show(
         context: context,
-        message:
-        'Sign up flow is demo only in this version. No real account will be created.',
-        type: AppSnackbarType.info,
+        message: 'Registration successful. Please log in.',
+        type: AppSnackbarType.success,
         bottomOffset: 24,
       );
 
       Navigator.pop(context);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: e.message,
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: 'Registration failed. Please try again.',
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
     } finally {
       if (mounted) {
         setState(() {

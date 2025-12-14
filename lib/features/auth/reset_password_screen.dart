@@ -5,15 +5,16 @@ import 'package:task_manager/core/widgets/primary_button.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/core/widgets/app_snackbar.dart';
 import 'package:task_manager/routing/route_names.dart';
+import 'package:task_manager/data/remote/auth_api.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
-  final String otp;
+  final String code;
 
   const ResetPasswordScreen({
     super.key,
     required this.email,
-    required this.otp,
+    required this.code,
   });
 
   @override
@@ -59,7 +60,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Future<void> _submit() async {
     if (_isSubmitting) return;
 
-    final form = _formKey.currentState;
+    final FormState? form = _formKey.currentState;
     if (form == null || !form.validate()) {
       return;
     }
@@ -69,22 +70,42 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     });
 
     try {
-      // Demo delay instead of real API call
-      await Future<void>.delayed(const Duration(milliseconds: 800));
+      final String newPassword = _passwordController.text.trim();
+
+      await authApi.resetPassword(
+        email: widget.email,
+        code: widget.code,
+        newPassword: newPassword,
+      );
 
       if (!mounted) return;
 
       AppSnackbar.show(
         context: context,
-        message: 'Password has been reset (demo only, no real API yet).',
+        message: 'Password has been reset successfully.',
         type: AppSnackbarType.success,
         bottomOffset: 24,
       );
 
-      // Go back to Login and clear the stack
       Navigator.of(context).pushNamedAndRemoveUntil(
         RouteNames.login,
-        (route) => false,
+        (Route<dynamic> route) => false,
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: e.message,
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      AppSnackbar.show(
+        context: context,
+        message: 'Failed to reset password. Please try again.',
+        type: AppSnackbarType.error,
+        bottomOffset: 24,
       );
     } finally {
       if (mounted) {
