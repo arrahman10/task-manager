@@ -17,8 +17,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppSnackbar.show(
-        context,
+        context: context,
         message: 'Welcome to Home.',
+        type: AppSnackbarType.info,
         bottomOffset: 24,
       );
     });

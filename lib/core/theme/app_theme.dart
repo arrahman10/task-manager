@@ -30,15 +30,16 @@ class AppTheme {
         foregroundColor: AppColors.textPrimary,
       ),
 
-      // Snackbar with glass-like style
+      // Snackbar theme: transparent shell, real colors come from AppSnackbar.show()
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.snackbarBackground,
-        contentTextStyle: AppTypography.caption.copyWith(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        contentTextStyle: AppTypography.body.copyWith(
           color: AppColors.snackbarText,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

@@ -28,10 +28,11 @@ class AppColors {
   static const Color glassTint = Color(0xCCFFFFFF); // 80% white
   static const Color glassBorder = Color(0x33FFFFFF); // 20% white
 
-  // Snackbar
-  static const Color snackbarBackground = Color(0xF0333845);
-  static const Color snackbarBorder = Color(0x66FFFFFF);
-  static const Color snackbarText = Colors.white;
+  // Snackbar colors
+  static const Color snackbarInfo = Color(0xFF00B2FF); // Info (blue)
+  static const Color snackbarSuccess = Color(0xFF00C853); // Success (green)
+  static const Color snackbarError = Color(0xFFFF5252); // Error (red)
+  static const Color snackbarText = Color(0xFFFFFFFF); // Text (white)
 
   // Loader
   static const Color loaderTrack = Color(0x33FFFFFF);
