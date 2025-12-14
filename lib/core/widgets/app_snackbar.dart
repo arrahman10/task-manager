@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/constants/app_colors.dart';
 import 'package:task_manager/core/widgets/glass_container.dart';
 
-class AppSnackbar {
+abstract final class AppSnackbar {
   static void show(
     BuildContext context, {
     required String message,
-    Color? accentColor,
+    Duration duration = const Duration(seconds: 2),
+    double bottomOffset = 80,
   }) {
+    final bottomSafeArea = MediaQuery.of(context).padding.bottom;
+
     final snackBar = SnackBar(
       behavior: SnackBarBehavior.floating,
-      elevation: 0,
+      margin: EdgeInsets.fromLTRB(16, 0, 16, bottomSafeArea + bottomOffset),
       backgroundColor: Colors.transparent,
+      elevation: 0,
+      duration: duration,
       content: GlassContainer(
-        blurSigma: 20,
-        child: Row(
-          children: [
-            Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: accentColor ?? AppColors.primary,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message)),
-          ],
+        radius: 16,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        blur: 14,
+        opacity: 0.18,
+        child: Text(
+          message,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: Colors.white),
         ),
       ),
     );

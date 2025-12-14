@@ -1,67 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1080" height="2400" viewBox="0 0 1080 2400" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Balanced cool tint (between v2 and v3) -->
-    <linearGradient id="bgBalanced" x1="540" y1="0" x2="540" y2="1920" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#C5DCE5"></stop>
-      <stop offset="0.35" stop-color="#CEE0E7"></stop>
-      <stop offset="0.75" stop-color="#D8E4EA"></stop>
-      <stop offset="1" stop-color="#DFE7EB"></stop>
-    </linearGradient>
+    <!-- Solid background (uniform light blue) -->
+    <style>
+      .wave1 { opacity: 0.10; stroke: #BFE3F4; stroke-width: 6; stroke-linecap: round; }
+      .wave2 { opacity: 0.08; stroke: #BFE3F4; stroke-width: 4; stroke-linecap: round; }
+      .isoFill1 { fill: #BFE3F4; }
+      .isoFill2 { fill: #B1D8EC; }
+      .isoFill3 { fill: #CFEAF7; }
+    </style>
 
-    <!-- Moderate top glow (not too bright) -->
-    <radialGradient id="topGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(900 -70) rotate(90) scale(800 800)">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.42"></stop>
-      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop>
-    </radialGradient>
-
-    <!-- Very soft bottom vignette (controls glare without darkening too much) -->
-    <radialGradient id="bottomVignette" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(540 1980) rotate(90) scale(760 980)">
-      <stop offset="0" stop-color="#8FA5AF" stop-opacity="0.14"></stop>
-      <stop offset="1" stop-color="#8FA5AF" stop-opacity="0"></stop>
-    </radialGradient>
-
-    <!-- Gentle mid fade -->
-    <linearGradient id="midFade" x1="540" y1="760" x2="540" y2="1500" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.10"></stop>
-      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop>
+    <!-- Bottom mist fade (same base tone, not corner glow) -->
+    <linearGradient id="bottomMistBlue" x1="0" y1="1860" x2="0" y2="2400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#EEF7FF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#EEF7FF" stop-opacity="0.85"/>
     </linearGradient>
   </defs>
 
-  <!-- Base -->
-  <rect width="1080" height="1920" fill="url(#bgBalanced)"></rect>
+  <!-- Base solid color -->
+  <rect width="1080" height="2400" fill="#EEF7FF"/>
 
-  <!-- Tiny dim overlay (between v2=none and v3=too much) -->
-  <rect width="1080" height="1920" fill="#0B0F12" opacity="0.022"></rect>
+  <!-- Subtle waves -->
+  <path d="M-40 520C160 460 340 460 540 520C760 588 920 588 1120 520" class="wave1"/>
+  <path d="M-60 600C160 540 350 540 560 600C780 664 930 664 1140 600" class="wave2"/>
 
-  <!-- Top glow -->
-  <ellipse cx="900" cy="-70" rx="860" ry="860" fill="url(#topGlow)"></ellipse>
+  <path d="M-40 1040C160 980 340 980 540 1040C760 1108 920 1108 1120 1040" class="wave1"/>
+  <path d="M-60 1120C160 1060 350 1060 560 1120C780 1184 930 1184 1140 1120" class="wave2"/>
 
-  <!-- Soft top curve (slightly tinted, not pure white) -->
-  <path d="M0 420
-       C250 255 430 210 610 232
-       C820 258 940 350 1080 270
-       L1080 0 L0 0 Z" fill="#F2F7FA" opacity="0.19"></path>
+  <!-- Very faint isometric illustration (monochrome in blue tone) -->
+  <g opacity="0.10">
+    <path d="M90 1960L720 1820L1030 1960L400 2100L90 1960Z" class="isoFill1"/>
+    <path d="M90 1960L400 2100L400 2145L90 2005V1960Z" class="isoFill2"/>
+    <path d="M400 2100L1030 1960V2005L400 2145V2100Z" class="isoFill3"/>
 
-  <!-- Deco arcs/circles (teal/cyan only, low opacity) -->
-  <circle cx="980" cy="-40" r="520" stroke="#1FCEE2" stroke-opacity="0.14" stroke-width="3"></circle>
-  <circle cx="980" cy="-40" r="660" stroke="#96E6EE" stroke-opacity="0.12" stroke-width="3"></circle>
+    <path d="M230 1900L450 1852L610 1932L390 1980L230 1900Z" class="isoFill3"/>
+    <path d="M230 1900L390 1980V2050L230 1970V1900Z" class="isoFill2"/>
+    <path d="M390 1980L610 1932V2002L390 2050V1980Z" class="isoFill1"/>
 
-  <!-- Mid soft layer -->
-  <path d="M0 980
-       C210 920 360 1010 540 1085
-       C760 1175 910 1100 1080 1030
-       L1080 1920 L0 1920 Z" fill="url(#midFade)"></path>
+    <path d="M640 1896L770 1868L905 1940L775 1968L640 1896Z" class="isoFill3"/>
+    <path d="M640 1896L775 1968V2034L640 1962V1896Z" class="isoFill2"/>
+    <path d="M775 1968L905 1940V2006L775 2034V1968Z" class="isoFill1"/>
+  </g>
 
-  <!-- Bottom vignette -->
-  <ellipse cx="540" cy="1980" rx="980" ry="760" fill="url(#bottomVignette)"></ellipse>
-
-  <!-- Bottom accents (subtle) -->
-  <path d="M0 1508
-       C230 1605 330 1735 250 1845
-       C190 1915 115 1950 0 1920
-       L0 1508 Z" fill="#1FCEE2" opacity="0.052"></path>
-  <path d="M1080 1338
-       C900 1420 820 1540 900 1668
-       C960 1760 1030 1810 1080 1865
-       L1080 1338 Z" fill="#1FCEE2" opacity="0.040"></path>
+  <rect y="1860" width="1080" height="540" fill="url(#bottomMistBlue)"/>
 </svg>

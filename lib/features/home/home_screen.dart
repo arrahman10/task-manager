@@ -1,50 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/core/widgets/app_drawer.dart';
 import 'package:task_manager/core/widgets/app_snackbar.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
-import 'package:task_manager/data/local/local_storage.dart';
-import 'package:task_manager/routing/route_names.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  Future<void> _logout(BuildContext context) async {
-    await LocalStorage().clearAuthToken();
-    if (!context.mounted) return;
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    AppSnackbar.show(context, message: 'Logged out (demo)');
-    Navigator.pushReplacementNamed(context, RouteNames.login);
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppSnackbar.show(
+        context,
+        message: 'Welcome to Home.',
+        bottomOffset: 24,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
+      appBar: AppBar(title: const Text('Home')),
       body: ScreenBackground(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Home',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Placeholder screen (drawer + tasks UI will be added later).',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: OutlinedButton(
-                    onPressed: () => _logout(context),
-                    child: const Text('Logout (Demo)'),
-                  ),
-                ),
-              ],
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            'Placeholder screen (drawer + tasks UI will be added later).',
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ),

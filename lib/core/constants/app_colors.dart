@@ -1,16 +1,42 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF2563EB);
-  static const Color background = Color(0xFFF7F8FA);
+  AppColors._();
+
+  // Base surfaces
+  static const Color background = Color(0xFFF2F7FF);
   static const Color surface = Colors.white;
 
-  static const Color textPrimary = Color(0xFF0F172A);
-  static const Color textSecondary = Color(0xFF64748B);
+  // Primary brand colors (inspired by Deco-style aqua)
+  static const Color primary = Color(0xFF18C1F3);
+  static const Color primaryDark = Color(0xFF0091C9);
+  static const Color primarySoft = Color(0xFFE1F7FF);
 
-  static const Color success = Color(0xFF16A34A);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color danger = Color(0xFFDC2626);
+  // Text colors
+  static const Color textPrimary = Color(0xFF111827);
+  static const Color textSecondary = Color(0xFF4B5563);
+  static const Color textMuted = Color(0xFF9CA3AF);
 
-  static const Color glassTint = Color(0x99FFFFFF);
+  // Button text
+  static const Color buttonTextOnPrimary = Colors.white;
+
+  // Borders / dividers
+  static const Color divider = Color(0xFFE5E7EB);
+  static const Color borderSubtle = Color(0x33FFFFFF);
+
+  // Glass / blur surfaces
+  static const Color glassTint = Color(0xCCFFFFFF); // 80% white
+  static const Color glassBorder = Color(0x33FFFFFF); // 20% white
+
+  // Snackbar
+  static const Color snackbarBackground = Color(0xF0333845);
+  static const Color snackbarBorder = Color(0x66FFFFFF);
+  static const Color snackbarText = Colors.white;
+
+  // Loader
+  static const Color loaderTrack = Color(0x33FFFFFF);
+  static const Color loaderProgress = Colors.white;
+
+  // Icons
+  static const Color iconPrimary = Color(0xFF4B5563);
 }
