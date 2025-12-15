@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/session/session_manager.dart';
+import 'package:task_manager/session/session_manager.dart';
 import 'package:task_manager/core/widgets/glass_container.dart';
 import 'package:task_manager/routing/route_names.dart';
 

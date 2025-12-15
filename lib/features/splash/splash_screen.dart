@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/constants/app_typography.dart';
-import 'package:task_manager/core/session/session_manager.dart';
+import 'package:task_manager/session/session_manager.dart';
 import 'package:task_manager/core/widgets/app_loader.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/routing/route_names.dart';

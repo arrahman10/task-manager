@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:task_manager/core/network/api_config.dart';
 import 'package:task_manager/core/network/api_exception.dart';
-import 'package:task_manager/core/session/session_manager.dart';
+import 'package:task_manager/session/session_manager.dart';
 
 class ApiClient {
   ApiClient({http.Client? client}) : _client = client ?? http.Client();

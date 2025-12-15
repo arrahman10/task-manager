@@ -18,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _mobileController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -29,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _mobileController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -54,6 +56,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!regExp.hasMatch(value.trim())) {
       return 'Please enter a valid email address.';
     }
+    return null;
+  }
+
+  String? _validateMobile(String? value) {
+    final String text = value?.trim() ?? '';
+
+    if (text.isEmpty) {
+      return 'Mobile is required.';
+    }
+
+    // Only allow 11-digit Bangladeshi mobile in local format: 01XXXXXXXXX
+    final RegExp bdLocalMobileRegExp = RegExp(r'^01\d{9}$');
+
+    if (!bdLocalMobileRegExp.hasMatch(text)) {
+      return 'Please enter a valid Bangladeshi mobile number (e.g. 01712345678).';
+    }
+
     return null;
   }
 
@@ -92,11 +111,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       final String fullName = _nameController.text.trim();
       final String email = _emailController.text.trim();
+      final String mobile = _mobileController.text.trim();
       final String password = _passwordController.text.trim();
 
       await authApi.register(
         fullName: fullName,
         email: email,
+        mobile: mobile,
         password: password,
       );
 
@@ -149,7 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       'Create your account',
                       style: AppTypography.h1,
                     ),
@@ -190,6 +211,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: _validateEmail,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Mobile
+                    TextFormField(
+                      controller: _mobileController,
+                      decoration: InputDecoration(
+                        labelText: 'Mobile',
+                        prefixIcon: const Icon(Icons.phone_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      validator: _validateMobile,
                     ),
                     const SizedBox(height: 16),
 
