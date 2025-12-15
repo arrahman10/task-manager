@@ -23,11 +23,21 @@ abstract final class SessionManager {
     return LocalStorage.getString(StorageKeys.userMobile);
   }
 
+  static String? get userFirstName {
+    return LocalStorage.getString(StorageKeys.userFirstName);
+  }
+
+  static String? get userLastName {
+    return LocalStorage.getString(StorageKeys.userLastName);
+  }
+
   static Future<void> saveDemoSession({
     required String token,
     String? name,
     String? email,
     String? mobile,
+    String? firstName,
+    String? lastName,
   }) async {
     await LocalStorage.setString(StorageKeys.authToken, token);
 
@@ -42,6 +52,14 @@ abstract final class SessionManager {
     if (mobile != null && mobile.trim().isNotEmpty) {
       await LocalStorage.setString(StorageKeys.userMobile, mobile.trim());
     }
+
+    if (firstName != null && firstName.trim().isNotEmpty) {
+      await LocalStorage.setString(StorageKeys.userFirstName, firstName.trim());
+    }
+
+    if (lastName != null && lastName.trim().isNotEmpty) {
+      await LocalStorage.setString(StorageKeys.userLastName, lastName.trim());
+    }
   }
 
   static Future<void> clearSession() async {
@@ -49,5 +67,7 @@ abstract final class SessionManager {
     await LocalStorage.remove(StorageKeys.userName);
     await LocalStorage.remove(StorageKeys.userEmail);
     await LocalStorage.remove(StorageKeys.userMobile);
+    await LocalStorage.remove(StorageKeys.userFirstName);
+    await LocalStorage.remove(StorageKeys.userLastName);
   }
 }

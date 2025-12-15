@@ -1,9 +1,8 @@
 import 'package:task_manager/data/local/local_storage.dart';
 import 'package:task_manager/data/remote/api_client.dart';
+import 'package:task_manager/session/session_manager.dart';
 
 export 'package:task_manager/data/remote/api_client.dart' show ApiException;
-
-import 'package:task_manager/session/session_manager.dart';
 
 class AuthApi {
   final ApiClient _client;
@@ -73,6 +72,8 @@ class AuthApi {
       name: fullName,
       email: emailFromApi,
       mobile: mobile,
+      firstName: firstName,
+      lastName: lastName,
     );
   }
 
@@ -126,6 +127,31 @@ class AuthApi {
         'OTP': code,
         'password': newPassword,
       },
+    );
+  }
+
+  Future<void> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String mobile,
+    String? password,
+  }) async {
+    final Map<String, dynamic> body = <String, dynamic>{
+      'firstName': firstName.trim(),
+      'lastName': lastName.trim(),
+      'mobile': mobile.trim(),
+      'photo': '',
+    };
+
+    final String trimmedPassword = (password ?? '').trim();
+    if (trimmedPassword.isNotEmpty) {
+      body['password'] = trimmedPassword;
+    }
+
+    await _client.post(
+      '/profileUpdate',
+      body: body,
+      useAuthToken: true,
     );
   }
 }
