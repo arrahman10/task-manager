@@ -3,6 +3,8 @@ import 'package:task_manager/data/remote/api_client.dart';
 
 export 'package:task_manager/data/remote/api_client.dart' show ApiException;
 
+import 'package:task_manager/session/session_manager.dart';
+
 class AuthApi {
   final ApiClient _client;
   final LocalStorage _storage;
@@ -12,6 +14,20 @@ class AuthApi {
     LocalStorage? storage,
   })  : _client = client ?? ApiClient(),
         _storage = storage ?? LocalStorage();
+
+  String _buildFullName({
+    required String firstName,
+    required String lastName,
+    required String emailFallback,
+  }) {
+    final String fn = firstName.trim();
+    final String ln = lastName.trim();
+    final String combined =
+        [fn, ln].where((e) => e.isNotEmpty).join(' ').trim();
+    if (combined.isNotEmpty) return combined;
+    final String local = emailFallback.split('@').first.trim();
+    return local.isNotEmpty ? local : 'User';
+  }
 
   Future<void> login({
     required String email,
@@ -26,9 +42,38 @@ class AuthApi {
     );
 
     final String? token = response['token'] as String?;
-    if (token != null && token.trim().isNotEmpty) {
-      await _storage.setAuthToken(token);
+    if (token == null || token.trim().isEmpty) {
+      throw ApiException('Login failed. Token is missing.');
     }
+
+    final Map<String, dynamic>? data = response['data'] is Map<String, dynamic>
+        ? response['data'] as Map<String, dynamic>
+        : null;
+
+    final String emailFromApi =
+        (data?['email'] as String?)?.trim().isNotEmpty == true
+            ? (data!['email'] as String).trim()
+            : email.trim();
+
+    final String firstName = (data?['firstName'] as String?) ?? '';
+    final String lastName = (data?['lastName'] as String?) ?? '';
+    final String mobile = (data?['mobile'] as String?) ?? '';
+
+    final String fullName = _buildFullName(
+      firstName: firstName,
+      lastName: lastName,
+      emailFallback: emailFromApi,
+    );
+
+    final String trimmedToken = token.trim();
+    await _storage.setAuthToken(trimmedToken);
+
+    await SessionManager.saveDemoSession(
+      token: trimmedToken,
+      name: fullName,
+      email: emailFromApi,
+      mobile: mobile,
+    );
   }
 
   Future<void> register({
