@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/widgets/glass_container.dart';
-import 'package:task_manager/features/tasks/task_model.dart';
+import 'package:task_manager/features/tasks/models/task_item.dart';
 
 class TaskListTile extends StatelessWidget {
-  final TaskModel task;
+  final TaskItem task;
   final VoidCallback onChangeStatus;
   final VoidCallback onDelete;
 
@@ -14,7 +14,11 @@ class TaskListTile extends StatelessWidget {
     required this.onDelete,
   });
 
-  String _formatDate(DateTime dt) {
+  String _displayDate(String raw) {
+    final String v = raw.trim();
+    if (v.isEmpty) return '-';
+    final DateTime? dt = DateTime.tryParse(v);
+    if (dt == null) return v;
     final String d = dt.day.toString().padLeft(2, '0');
     final String m = dt.month.toString().padLeft(2, '0');
     final String y = dt.year.toString();
@@ -49,7 +53,7 @@ class TaskListTile extends StatelessWidget {
                   ),
                 const SizedBox(height: 6),
                 Text(
-                  _formatDate(task.createdAt),
+                  _displayDate(task.createdDate),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],

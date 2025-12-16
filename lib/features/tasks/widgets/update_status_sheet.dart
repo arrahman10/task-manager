@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/widgets/primary_button.dart';
-import 'package:task_manager/features/tasks/task_status.dart';
+import 'package:task_manager/features/tasks/task_status_value.dart';
 
 class UpdateStatusSheet extends StatefulWidget {
-  final TaskStatus initial;
+  final String initial;
 
   const UpdateStatusSheet({
     super.key,
@@ -15,12 +15,12 @@ class UpdateStatusSheet extends StatefulWidget {
 }
 
 class _UpdateStatusSheetState extends State<UpdateStatusSheet> {
-  late TaskStatus _selected;
+  late String _selected;
 
   @override
   void initState() {
     super.initState();
-    _selected = widget.initial;
+    _selected = TaskStatusValue.normalize(widget.initial);
   }
 
   @override
@@ -42,17 +42,17 @@ class _UpdateStatusSheetState extends State<UpdateStatusSheet> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
-            ...TaskStatus.values.map((TaskStatus status) {
-              return RadioListTile<TaskStatus>(
-                value: status,
+            ...TaskStatusValue.all.map((String s) {
+              return RadioListTile<String>(
+                value: s,
                 groupValue: _selected,
-                onChanged: (TaskStatus? v) {
+                onChanged: (String? v) {
                   if (v == null) return;
                   setState(() => _selected = v);
                 },
-                title: Text(status.label),
+                title: Text(TaskStatusValue.label(s)),
               );
-            }).toList(),
+            }),
             const SizedBox(height: 12),
             PrimaryButton(
               label: 'Update',

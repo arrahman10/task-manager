@@ -1,3 +1,5 @@
+import 'package:task_manager/features/tasks/task_status_value.dart';
+
 class TaskItem {
   final String id;
   final String title;
@@ -17,7 +19,8 @@ class TaskItem {
     final String id = (json['_id'] ?? json['id'] ?? '').toString();
     final String title = (json['title'] ?? '').toString();
     final String description = (json['description'] ?? '').toString();
-    final String status = (json['status'] ?? '').toString();
+    final String status =
+        TaskStatusValue.normalize((json['status'] ?? '').toString());
     final String createdDate =
         (json['createdDate'] ?? json['created_at'] ?? '').toString();
 

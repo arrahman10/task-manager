@@ -26,19 +26,24 @@ class TaskApi {
     for (final dynamic row in data) {
       if (row is! Map) continue;
       final Map<String, dynamic> m = Map<String, dynamic>.from(row as Map);
-      final String status = (m['_id'] ?? m['status'] ?? '').toString().trim();
+      final String rawStatus =
+          (m['_id'] ?? m['status'] ?? '').toString().trim();
       final int sum =
           int.tryParse((m['sum'] ?? m['count'] ?? 0).toString()) ?? 0;
-      if (status.isEmpty) continue;
-      counts[status] = sum;
+      if (rawStatus.isEmpty) continue;
+      final String key = TaskStatusValue.normalize(rawStatus);
+      if (!counts.containsKey(key)) continue;
+      counts[key] = sum;
     }
 
     return counts;
   }
 
   Future<List<TaskItem>> listByStatus(String status) async {
+    final String safeStatus =
+        Uri.encodeComponent(TaskStatusValue.normalize(status));
     final Map<String, dynamic> response = await _client.get(
-      '/listTaskByStatus/$status',
+      '/listTaskByStatus/$safeStatus',
       useAuthToken: true,
     );
 
@@ -69,8 +74,11 @@ class TaskApi {
     required String id,
     required String status,
   }) async {
+    final String safeId = Uri.encodeComponent(id);
+    final String safeStatus =
+        Uri.encodeComponent(TaskStatusValue.normalize(status));
     await _client.get(
-      '/updateTaskStatus/$id/$status',
+      '/updateTaskStatus/$safeId/$safeStatus',
       useAuthToken: true,
     );
   }
@@ -78,8 +86,9 @@ class TaskApi {
   Future<void> deleteTask({
     required String id,
   }) async {
+    final String safeId = Uri.encodeComponent(id);
     await _client.get(
-      '/deleteTask/$id',
+      '/deleteTask/$safeId',
       useAuthToken: true,
     );
   }

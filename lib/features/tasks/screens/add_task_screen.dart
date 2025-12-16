@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/core/constants/app_typography.dart';
 import 'package:task_manager/core/widgets/app_snackbar.dart';
+import 'package:task_manager/core/widgets/glass_container.dart';
 import 'package:task_manager/core/widgets/primary_button.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
 import 'package:task_manager/data/remote/task_api.dart';
@@ -74,6 +76,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     }
   }
 
+  InputDecoration _fieldDecoration({
+    required String label,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,27 +100,41 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  TextFormField(
-                    controller: _titleController,
-                    textInputAction: TextInputAction.next,
-                    validator: _validateTitle,
-                    decoration: const InputDecoration(labelText: 'Title'),
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _descriptionController,
-                    minLines: 3,
-                    maxLines: 6,
-                    textInputAction: TextInputAction.done,
-                    validator: _validateDescription,
-                    decoration: const InputDecoration(labelText: 'Description'),
-                    onFieldSubmitted: (_) => _submit(),
-                  ),
-                  const SizedBox(height: 16),
-                  PrimaryButton(
-                    label: 'Create',
-                    onPressed: _submit,
-                    isBusy: _isSubmitting,
+                  GlassContainer(
+                    radius: 24,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        const Text(
+                          'Add New Task',
+                          style: AppTypography.h1,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _titleController,
+                          textInputAction: TextInputAction.next,
+                          validator: _validateTitle,
+                          decoration: _fieldDecoration(label: 'Title'),
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: _descriptionController,
+                          minLines: 3,
+                          maxLines: 6,
+                          textInputAction: TextInputAction.done,
+                          validator: _validateDescription,
+                          decoration: _fieldDecoration(label: 'Description'),
+                          onFieldSubmitted: (_) => _submit(),
+                        ),
+                        const SizedBox(height: 16),
+                        PrimaryButton(
+                          label: 'Create',
+                          onPressed: _submit,
+                          isBusy: _isSubmitting,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
