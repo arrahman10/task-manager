@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/constants/app_typography.dart';
 import 'package:task_manager/core/widgets/screen_background.dart';
+import 'package:task_manager/features/auth/forgot_password_screen.dart';
+import 'package:task_manager/features/auth/login_screen.dart';
+import 'package:task_manager/features/auth/register_screen.dart';
 import 'package:task_manager/features/splash/splash_screen.dart';
 import 'package:task_manager/routing/route_names.dart';
 
-/// Central route generator for the entire application.
-///
-/// Later commits will replace the placeholder screens with
-/// real feature screens (auth, home dashboard, profile, etc.).
 abstract final class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -18,39 +17,30 @@ abstract final class AppRouter {
 
       case RouteNames.login:
         return MaterialPageRoute<void>(
-          builder: (_) => const _PlaceholderScreen(
-            title: 'Login',
-            message: 'Login screen UI will be implemented in the next step.',
-          ),
+          builder: (_) => const LoginScreen(),
         );
 
       case RouteNames.register:
         return MaterialPageRoute<void>(
-          builder: (_) => const _PlaceholderScreen(
-            title: 'Register',
-            message:
-                'Registration screen UI will be implemented in the next step.',
-          ),
+          builder: (_) => const RegisterScreen(),
         );
 
       case RouteNames.forgotPassword:
         return MaterialPageRoute<void>(
-          builder: (_) => const _PlaceholderScreen(
-            title: 'Forgot password',
-            message:
-                'Password reset flow will be implemented in the next step.',
-          ),
+          builder: (_) => const ForgotPasswordScreen(),
         );
 
+      // Home এখনো implement হয়নি, তাই glass placeholder।
       case RouteNames.home:
         return MaterialPageRoute<void>(
           builder: (_) => const _PlaceholderScreen(
             title: 'Home',
             message:
-                'Home dashboard will be implemented after task feature setup.',
+                'Home dashboard will be implemented after the task features.',
           ),
         );
 
+      // Profile screen ও future step এ আসবে।
       case RouteNames.profile:
         return MaterialPageRoute<void>(
           builder: (_) => const _PlaceholderScreen(
@@ -60,7 +50,7 @@ abstract final class AppRouter {
           ),
         );
 
-      // Fallback route for unknown names.
+      // Fallback route
       default:
         return MaterialPageRoute<void>(
           builder: (_) => const _PlaceholderScreen(
@@ -72,7 +62,6 @@ abstract final class AppRouter {
   }
 }
 
-/// Simple glass-style placeholder page used until real screens exist.
 class _PlaceholderScreen extends StatelessWidget {
   const _PlaceholderScreen({
     required this.title,
@@ -85,9 +74,7 @@ class _PlaceholderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: ScreenBackground(
         child: Center(
           child: Padding(
